@@ -1,9 +1,12 @@
 package br.com.maciel.panapp.model.entity;
 
-import br.com.maciel.panapp.model.Endereco;
-import br.com.maciel.panapp.model.Telefone;
-
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.GenerationType;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import java.util.List;
 
 @Entity
@@ -16,10 +19,19 @@ public class PessoaEntity {
   private String cpfPessoa;
   private String filiacaoPai;
   private String filiacaoMae;
-  @ManyToMany @JoinTable(name = "PessoasHasTelefones")
+  @ManyToMany
+  @JoinTable(name = "PessoasHasTelefones")
   private List<TelefoneEntity> telefones;
   @ManyToMany @JoinTable(name = "PessoasHasEnderecos")
   private List<EnderecoEntity> enderecos;
+
+  public Long getIdPessoa() {
+    return idPessoa;
+  }
+
+  public void setIdPessoa(Long idPessoa) {
+    this.idPessoa = idPessoa;
+  }
 
   public String getNomePessoa() {
     return nomePessoa;

@@ -1,6 +1,5 @@
 package br.com.maciel.panapp.repository;
 
-import br.com.maciel.panapp.model.entity.EnderecoEntity;
 import br.com.maciel.panapp.model.entity.PessoaEntity;
 import org.springframework.data.repository.CrudRepository;
 

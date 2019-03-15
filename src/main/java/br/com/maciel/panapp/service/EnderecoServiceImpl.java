@@ -11,8 +11,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,7 +21,7 @@ public class EnderecoServiceImpl implements EnderecoService {
 
     private ViaCepHttpIntegration viacepService;
 
-    private Logger logger;
+    private static final Logger LOGGER = LoggerFactory.getLogger(EnderecoServiceImpl.class);
 
     private final List<String> estadosFavoritos = new ArrayList<String>(){{
             add("SP");
@@ -33,7 +31,6 @@ public class EnderecoServiceImpl implements EnderecoService {
     public EnderecoServiceImpl(IbgeHttpIntegration ibgeService, ViaCepHttpIntegration viacepService) {
         this.ibgeService = ibgeService;
         this.viacepService = viacepService;
-        logger = LoggerFactory.getLogger(EnderecoServiceImpl.class);
     }
 
     /**
@@ -41,17 +38,24 @@ public class EnderecoServiceImpl implements EnderecoService {
      * @return lista de estados
      */
     public List<Estado> obterListaEstados() {
+        LOGGER.info("Obtendo lista de estados em IbgeService.");
         List<Localidade> localidades = ibgeService.obterListaLocalidades();
+        if(localidades.isEmpty()) {
+            LOGGER.error("Nenhum estado encontrado em IgbeService.");
+            return null;
+        }
         List<Estado> estadoList = localidades.stream().map(l -> {
             return new Estado(l.getId(), l.getSigla().toUpperCase(), l.getNome());
         }).collect(Collectors.toList());
         //Ordenando
         estadoList.sort((o1, o2) -> {
-            if(estadosFavoritos.contains(o1.getSigla()))
+            if(estadosFavoritos.contains(o1.getSigla())) {
                 return -999; //Faz com que os estados favoritos (SP, RJ) aparecam primeiro na listagem
-            else
+            } else {
                 return o1.getSigla().compareTo(o2.getSigla());
+            }
         });
+        LOGGER.info("Encontrados {} estados retornados pelo IbgeService.", estadoList.size());
         return estadoList;
     }
 
@@ -61,11 +65,16 @@ public class EnderecoServiceImpl implements EnderecoService {
      * @return lista de municipios daquela localidade
      */
     public List<Municipio> obterListaMunicipios(Integer localidadeId) {
+        LOGGER.info("Obtendo lista de municipios com o parâmetro localidadeId: {localidadeId}, em IbgeService.", localidadeId);
         List<Localidade> localidades = ibgeService.obterListaMunicipiosLocalidades(localidadeId);
-        List<Municipio> municipioList = localidades.stream().map(l -> {
+        if(localidades.isEmpty()) {
+            LOGGER.error("Nenhum municipio encontrado com o parâmetro localidadeId: {localidadeId}, em IbgeService.", localidadeId);
+            return null;
+        }
+        LOGGER.error("Encontrados {} municipios com o parâmetro localidadeId: {localidadeId}, em IbgeService.", localidades.size());
+        return localidades.stream().map(l -> {
             return new Municipio(l.getId(), l.getNome());
         }).collect(Collectors.toList());
-        return municipioList;
     }
 
     /**
@@ -75,6 +84,7 @@ public class EnderecoServiceImpl implements EnderecoService {
      */
     @Override
     public Endereco obterEnderecoDoCep(String cep) {
+        LOGGER.info("Obtendo dados do endereço com p parâmetro cep: {cep}, em ViaCepService.", cep);
         return viacepService.obterDadosCep(cep);
     }
 }

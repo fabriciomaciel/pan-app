@@ -3,7 +3,6 @@ package br.com.maciel.panapp.service;
 import br.com.maciel.panapp.model.Endereco;
 import br.com.maciel.panapp.model.Estado;
 import br.com.maciel.panapp.model.Municipio;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 

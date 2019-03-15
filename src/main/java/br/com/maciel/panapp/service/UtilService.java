@@ -18,12 +18,11 @@ import java.util.Set;
 @Service
 public class UtilService {
 
-    private Validator validator;
-    private Logger logger;
+    private final Validator validator;
+    private static final Logger LOGGER = LoggerFactory.getLogger(UtilService.class);
 
     public UtilService(Validator validator) {
         this.validator = validator;
-        logger = LoggerFactory.getLogger(UtilService.class);
     }
 
     /**
@@ -35,19 +34,19 @@ public class UtilService {
      */
     public boolean validarDadosEntrada(String cpf, String cep) throws PanAppException {
         Set<ConstraintViolation<Object>> validateResult = validator.validate(new ValidateRequestModel(cpf, cep));
-        if(validateResult.size() > 0) {
+        if(!validateResult.isEmpty()) {
             List<String> errorDetails = new ArrayList<String>();
             validateResult.forEach( it -> {
                 errorDetails.add(it.getMessage());
-                logger.error("Erro de validação para os parâmetros cpf: {}, cep: {}, erro: {}.", cpf, cep, it.getMessage());
+                LOGGER.error("Erro de validação para os parâmetros cpf: {}, cep: {}, erro: {}.", cpf, cep, it.getMessage());
             });
             throw new PanAppException(HttpStatus.BAD_REQUEST, "Erro na validação de dados informados.", errorDetails);
         }
-        logger.info("Validação realizada com sucesso para os parâmetros cpf: {}, cep: {}.", cpf, cep);
+        LOGGER.info("Validação realizada com sucesso para os parâmetros cpf: {}, cep: {}.", cpf, cep);
         return true;
     }
 
-    class ValidateRequestModel  {
+    private class ValidateRequestModel  {
         @CPF(message = "O CPF Informado não é valido")
         private String cpf;
         @Size(min = 8, max = 9, message = "O Cep informado não possui o formato correto")

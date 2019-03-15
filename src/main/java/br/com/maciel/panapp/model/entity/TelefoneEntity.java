@@ -2,7 +2,13 @@ package br.com.maciel.panapp.model.entity;
 
 import br.com.maciel.panapp.model.TIPO_TELEFONE;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.GenerationType;
+import javax.persistence.Enumerated;
+import javax.persistence.EnumType;
 
 @Entity
 @Table(name = "PessoaTelefone")

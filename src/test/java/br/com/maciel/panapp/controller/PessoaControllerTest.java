@@ -1,7 +1,5 @@
 package br.com.maciel.panapp.controller;
 
-import static org.junit.Assert.*;
-
 public class PessoaControllerTest {
 
   /*

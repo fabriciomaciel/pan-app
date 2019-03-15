@@ -1,6 +1,5 @@
 package br.com.maciel.panapp.controller;
 
-import br.com.maciel.panapp.exception.PanAppException;
 import br.com.maciel.panapp.model.Endereco;
 import br.com.maciel.panapp.model.Pessoa;
 import br.com.maciel.panapp.service.PessoaService;
@@ -22,13 +21,12 @@ public class PessoaController {
 
   private PessoaService service;
 
-  private Logger logger;
+  private static final Logger LOGGER = LoggerFactory.getLogger(PessoaController.class);
 
   @Autowired
   public PessoaController(UtilService utilService, PessoaService service) {
     this.utilService = utilService;
     this.service = service;
-    logger = LoggerFactory.getLogger(PessoaController.class);
   }
 
   /**
@@ -38,7 +36,7 @@ public class PessoaController {
    */
   @GetMapping(value = "/pessoa/{cpf}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
   public ResponseEntity<Pessoa> obterDadosPessoa(@PathVariable("cpf") String cpf) {
-    logger.info("Recebendo requisição para obter os dados da pessoa com o parâmetro cpf: {}", cpf);
+    LOGGER.info("Recebendo requisição para obter os dados da pessoa com o parâmetro cpf: {}", cpf);
     //Validar os dados de entrada (gera uma exception em casos de erro)
     utilService.validarDadosEntrada(cpf, null);
     //Realiza a consulta
@@ -48,7 +46,7 @@ public class PessoaController {
       return ResponseEntity.noContent().build();
     }
     //Retornar o resutado
-    logger.info("Finalizando com sucesso a requisição da pessoa com o parâmetro cpf: {}", cpf);
+    LOGGER.info("Finalizando com sucesso a requisição da pessoa com o parâmetro cpf: {}", cpf);
     return ResponseEntity.ok(pessoa);
   }
 
@@ -60,7 +58,7 @@ public class PessoaController {
    */
   @GetMapping("/pessoa/{cpf}/endereco/{cep}")
   public ResponseEntity<Endereco> obterEnderecoPessoa(@PathVariable("cpf") String cpf, @PathVariable("cep") String cep) {
-    logger.info("Recebendo requisição para obter os dados da pessoa com o parâmetro cpf: {}, cep: {}", cpf, cep);
+    LOGGER.info("Recebendo requisição para obter os dados da pessoa com o parâmetro cpf: {}, cep: {}", cpf, cep);
     //Validar os dados de entrada (gera uma exception em casos de erro)
     utilService.validarDadosEntrada(cpf, cep);
     //Realiza a consulta
@@ -70,7 +68,7 @@ public class PessoaController {
       return ResponseEntity.noContent().build();
     }
     //Retornar o resutado
-    logger.info("Finalizando com sucesso a requisição da pessoa com o parâmetro cpf: {}, cep: {}", cpf, cep);
+    LOGGER.info("Finalizando com sucesso a requisição da pessoa com o parâmetro cpf: {}, cep: {}", cpf, cep);
     return ResponseEntity.ok(endereco);
   }
 

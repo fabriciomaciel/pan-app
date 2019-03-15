@@ -13,10 +13,12 @@ import java.util.List;
 class PanAppExceptionDetails {
   private String message;
   private List<String> details;
-  PanAppExceptionDetails(String msg, List<String> details) {
+
+  public PanAppExceptionDetails(String msg, List<String> details) {
     this.message = msg;
     this.details = details;
   }
+
   public String getMessage() {    return message;  }
   public void setMessage(String message) {    this.message = message;  }
   public List<String> getDetails() {    return details;  }
