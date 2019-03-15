@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -23,10 +24,16 @@ public class PessoaServiceImpl implements PessoaService {
     this.repository = repository;
   }
 
+  /**
+   *
+   * @param cpf
+   * @return
+   * @throws PanAppException
+   */
   @Override
-  public Pessoa consultarPessoa(String cpf) throws PanAppException {
+  public Pessoa consultarPessoa(String cpf) {
     LOGGER.info("Realizando consulta da pessoa com o parâmetro cpf: {}.", cpf);
-    List<PessoaEntity> pessoas = repository.findAllByCpfPessoa(cpf.replace(".", "").replace("-", ""));
+    List<PessoaEntity> pessoas = repository.findByCpfPessoa(cpf.replace(".", "").replace("-", ""));
     if(pessoas.isEmpty()) {
       LOGGER.error("Nenhuma pessoa encontrada com o parâmetro cpf: {}.", cpf);
       return null;    }
@@ -38,12 +45,48 @@ public class PessoaServiceImpl implements PessoaService {
     }
   }
 
-  public Endereco consultarEnderecoPessoa(String cpf, String cep) throws PanAppException {
-    List<PessoaEntity> pessoaEndereco = repository.findAllByCpfPessoaAndEnderecosCep(cpf.replace(".", "").replace("-", ""), cep.replace("-", ""));
-    if(pessoaEndereco.get(0).getEnderecos().isEmpty()) { return null;}
+  /**
+   *
+   * @param cpf
+   * @param cep
+   * @return
+   * @throws PanAppException
+   */
+  @Override
+  public List<Endereco> consultarEnderecoPessoa(String cpf, String cep)  {
+    PessoaEntity pessoaEndereco = repository.findByCpfPessoaAndEnderecosCep(cpf.replace(".", "").replace("-", ""), cep.replace("-", ""));
+    if(pessoaEndereco == null || pessoaEndereco.getEnderecos().isEmpty()) { return null;}
     else {
+      List<Endereco> retorno = new ArrayList<Endereco>();
+      pessoaEndereco.getEnderecos().forEach( entity -> {
+        Endereco e = new Endereco();
+        BeanUtils.copyProperties(entity, e);
+        retorno.add(e);
+      });
+      return retorno;
+    }
+  }
+
+  /**
+   *
+   * @param cpf
+   * @param enderecoId
+   * @param enderecoAlterado
+   * @return
+   */
+  @Override
+  public Endereco alterarEnderecoPessoa(String cpf, Long enderecoId, Endereco enderecoAlterado) {
+    //Setamos o endereçoId com base no parâmetro informado
+    enderecoAlterado.setIdEndereco(enderecoId);
+    PessoaEntity pessoaEndereco = repository.findByCpfPessoaAndEnderecosIdEndereco(cpf.replace(".", "").replace("-", ""),
+        enderecoId);
+    if(pessoaEndereco == null || pessoaEndereco.getEnderecos().isEmpty()) { return null;}
+    else {
+      BeanUtils.copyProperties(enderecoAlterado, pessoaEndereco.getEnderecos().get(0));
+      repository.save(pessoaEndereco);
+      //retornar o endeço atualizado
       Endereco e = new Endereco();
-      BeanUtils.copyProperties(pessoaEndereco.get(0).getEnderecos().get(0), e);
+      BeanUtils.copyProperties(pessoaEndereco.getEnderecos().get(0), e);
       return e;
     }
   }

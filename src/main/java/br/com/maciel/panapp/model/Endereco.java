@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Endereco {
 
+  private Long idEndereco;
   private String apelidoEndereco;
   private String logradouro;
   private Integer numeroLogradouro;
@@ -19,6 +20,14 @@ public class Endereco {
   @JsonAlias({ "uf", "estado" }) //Necessário para mapeamento com ViaCep
   private String uf;
   private String cep;
+
+  public Long getIdEndereco() {
+    return idEndereco;
+  }
+
+  public void setIdEndereco(Long idEndereco) {
+    this.idEndereco = idEndereco;
+  }
 
   public String getApelidoEndereco() {
     return apelidoEndereco;

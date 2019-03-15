@@ -9,9 +9,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @RestController
@@ -57,19 +57,32 @@ public class PessoaController {
    * @return
    */
   @GetMapping("/pessoa/{cpf}/endereco/{cep}")
-  public ResponseEntity<Endereco> obterEnderecoPessoa(@PathVariable("cpf") String cpf, @PathVariable("cep") String cep) {
+  public ResponseEntity<List<Endereco>> obterEnderecoPessoa(@PathVariable("cpf") String cpf, @PathVariable("cep") String cep) {
     LOGGER.info("Recebendo requisição para obter os dados da pessoa com o parâmetro cpf: {}, cep: {}", cpf, cep);
     //Validar os dados de entrada (gera uma exception em casos de erro)
     utilService.validarDadosEntrada(cpf, cep);
     //Realiza a consulta
-    Endereco endereco = service.consultarEnderecoPessoa(cpf, cep);
+    List<Endereco>  enderecos = service.consultarEnderecoPessoa(cpf, cep);
 
-    if (endereco == null) {
+    if (enderecos.isEmpty()) {
       return ResponseEntity.noContent().build();
     }
     //Retornar o resutado
     LOGGER.info("Finalizando com sucesso a requisição da pessoa com o parâmetro cpf: {}, cep: {}", cpf, cep);
-    return ResponseEntity.ok(endereco);
+    return ResponseEntity.ok(enderecos);
   }
 
+  @PutMapping("/pessoa/{cpf}/endereco/{enderecoId}")
+  public ResponseEntity<Endereco> alterarEnderecoPessoa(@PathVariable("cpf") String cpf, @PathVariable("enderecoId") Long enderecoId,
+                                                        @RequestBody Endereco enderecoAlterado) {
+    LOGGER.info("Recebendo requisição para alterar endereço da pessoa com o parâmetro cpf: {}, enderecoId: {}", cpf, enderecoId);
+    //Validar os dados de entrada (gera uma exception em casos de erro)
+    utilService.validarDadosEntrada(cpf, null);
+    Endereco endereco = service.alterarEnderecoPessoa(cpf, enderecoId, enderecoAlterado);
+    if(endereco == null) {
+      return ResponseEntity.noContent().build();
+    } else {
+      return ResponseEntity.ok(endereco);
+    }
+  }
 }
