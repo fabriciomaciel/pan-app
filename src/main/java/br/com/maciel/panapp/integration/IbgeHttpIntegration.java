@@ -1,6 +1,7 @@
 package br.com.maciel.panapp.integration;
 
 import br.com.maciel.panapp.integration.model.Localidade;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
@@ -23,12 +24,9 @@ public class IbgeHttpIntegration {
     @Value("${ibge.service.municipios}")
     private String ibgeServiceMunicipio;
 
-
+    @Autowired
     private RestTemplate restTemplate;
 
-    public IbgeHttpIntegration() {
-        this.restTemplate = new RestTemplate();
-    }
 
     /**
      * Obtem uma lista de localidades do service do IBGE

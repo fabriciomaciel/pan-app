@@ -1,7 +1,9 @@
 package br.com.maciel.panapp.service;
 
 import br.com.maciel.panapp.integration.IbgeHttpIntegration;
+import br.com.maciel.panapp.integration.ViaCepHttpIntegration;
 import br.com.maciel.panapp.integration.model.Localidade;
+import br.com.maciel.panapp.model.Endereco;
 import br.com.maciel.panapp.model.Estado;
 import br.com.maciel.panapp.model.Municipio;
 import org.slf4j.Logger;
@@ -19,6 +21,8 @@ public class EnderecoServiceImpl implements EnderecoService {
 
     private IbgeHttpIntegration ibgeService;
 
+    private ViaCepHttpIntegration viacepService;
+
     private Logger logger;
 
     private final List<String> estadosFavoritos = new ArrayList<String>(){{
@@ -26,8 +30,9 @@ public class EnderecoServiceImpl implements EnderecoService {
             add("RJ");
         }};
 
-    public EnderecoServiceImpl(IbgeHttpIntegration ibgeService) {
+    public EnderecoServiceImpl(IbgeHttpIntegration ibgeService, ViaCepHttpIntegration viacepService) {
         this.ibgeService = ibgeService;
+        this.viacepService = viacepService;
         logger = LoggerFactory.getLogger(EnderecoServiceImpl.class);
     }
 
@@ -61,5 +66,15 @@ public class EnderecoServiceImpl implements EnderecoService {
             return new Municipio(l.getId(), l.getNome());
         }).collect(Collectors.toList());
         return municipioList;
+    }
+
+    /**
+     * Requisita ao serviço de integração os dados do endereço de um determinado cep
+     * @param cep
+     * @return
+     */
+    @Override
+    public Endereco obterEnderecoDoCep(String cep) {
+        return viacepService.obterDadosCep(cep);
     }
 }

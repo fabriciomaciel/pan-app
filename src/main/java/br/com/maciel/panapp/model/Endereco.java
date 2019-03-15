@@ -1,7 +1,10 @@
 package br.com.maciel.panapp.model;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Endereco {
 
   private String apelidoEndereco;
@@ -10,8 +13,10 @@ public class Endereco {
   private String complemento;
   private String bairro;
   @JsonProperty("cidade")
+  @JsonAlias({ "localidade", "cidade" }) //Necessário para mapeamento com ViaCep
   private String localidade;
   @JsonProperty("estado")
+  @JsonAlias({ "uf", "estado" }) //Necessário para mapeamento com ViaCep
   private String uf;
   private String cep;
 

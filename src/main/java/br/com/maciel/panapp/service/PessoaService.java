@@ -7,8 +7,6 @@ import org.springframework.stereotype.Service;
 
 public interface PessoaService {
 
-  boolean validarDadosEntrada(String cpf, String cep) throws PanAppException;
-
   Pessoa consultarPessoa(String cpf) throws PanAppException;
 
   public Endereco consultarEnderecoPessoa(String cpf, String cep) throws PanAppException;
