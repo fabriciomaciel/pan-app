@@ -67,4 +67,11 @@ public class Pessoa {
   public void setEnderecos(List<Endereco> enderecos) {
     this.enderecos = enderecos;
   }
+
+  @Override
+  public String toString() {
+    return "Pessoa{" +
+            "nomePessoa='" + nomePessoa + '\'' +
+            '}';
+  }
 }
