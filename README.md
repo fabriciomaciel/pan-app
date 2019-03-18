@@ -31,14 +31,18 @@ O arquivo: *br.com.maciel.panapp.MockDevData.java* possui os dados que são inse
 
 # Pessoa
 
-###Consultar uma pessoa utilizando seu CPF como parâmetro.
+### Consultar uma pessoa utilizando seu CPF como parâmetro.
+
 **[GET]** http://localhost:8080/panapp/pessoa/45081816604
 
-###Consultar o endereço pessoa utilizando seu CPF e CEP como parâmetro.
+### Consultar o endereço pessoa utilizando seu CPF e CEP como parâmetro.
+
 **[GET]** http://localhost:8080/panapp/pessoa/45081816604/endereco/02721200
 
-###Alterar o endereço de uma pessoa
+### Alterar o endereço de uma pessoa
+
 **[PUT]** http://localhost:8080/panapp/pessoa/45081816604/endereco/3
+
 > exemplo de curl para realizar a alteração:
 ```
 curl -X PUT \
@@ -58,12 +62,16 @@ curl -X PUT \
     }'
 ```
 
-#Endereço
-###Consulta de estados brasileiros
+# Endereço
+
+### Consulta de estados brasileiros
+
 **[GET]**  http://localhost:8080/panapp/endereco/estados
 
-###Consulta de municipios de um determinado estados brasileiro
+### Consulta de municipios de um determinado estados brasileiro
+
 **[GET]**  http://localhost:8080/panapp/endereco/estados/35/municipios
 
-###Consulta de um endereço pelo CEP
+### Consulta de um endereço pelo CEP
+
 **[GET]**  http://localhost:8080/panapp/endereco/cep/02721200
