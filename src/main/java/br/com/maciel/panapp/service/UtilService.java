@@ -1,6 +1,7 @@
 package br.com.maciel.panapp.service;
 
 import br.com.maciel.panapp.exception.PanAppException;
+import br.com.maciel.panapp.model.Endereco;
 import org.hibernate.validator.constraints.br.CPF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,7 +9,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.validation.ConstraintViolation;
+import javax.validation.Valid;
 import javax.validation.Validator;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
@@ -32,8 +35,8 @@ public class UtilService {
      * @return
      * @throws PanAppException
      */
-    public boolean validarDadosEntrada(String cpf, String cep) throws PanAppException {
-        Set<ConstraintViolation<Object>> validateResult = validator.validate(new ValidateRequestModel(cpf, cep));
+    public boolean validarDadosEntrada(String cpf, String cep, Long enderecoId, Endereco enderecoAlteracao) throws PanAppException {
+        Set<ConstraintViolation<Object>> validateResult = validator.validate(new ValidateRequestModel(cpf, cep, enderecoId, enderecoAlteracao));
         if(!validateResult.isEmpty()) {
             List<String> errorDetails = new ArrayList<String>();
             validateResult.forEach( it -> {
@@ -52,10 +55,16 @@ public class UtilService {
         @Size(min = 8, max = 9, message = "O Cep informado não possui o formato correto")
         @Pattern(regexp = "[0-9]{5}-?[0-9]{3}", message = "O Cep informado não possui o formato correto")
         private String cep;
+        @Min(value = 1, message = "O enderecoID informado não é valido")
+        private Long enderecoId;
+        @Valid
+        private Endereco endereco;
 
-        public ValidateRequestModel(String cpf,String cep) {
+        public ValidateRequestModel(String cpf, String cep, Long enderecoId, Endereco endereco) {
             this.cpf = cpf;
             this.cep = cep;
+            this.enderecoId = enderecoId;
+            this.endereco = endereco;
         }
 
         public String getCpf() {
@@ -64,6 +73,14 @@ public class UtilService {
 
         public String getCep() {
             return cep;
+        }
+
+        public Long getEnderecoId() {
+            return enderecoId;
+        }
+
+        public Endereco getEndereco() {
+            return endereco;
         }
     }
 }

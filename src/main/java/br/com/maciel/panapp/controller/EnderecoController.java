@@ -78,7 +78,7 @@ public class EnderecoController {
     public ResponseEntity<Endereco> obterEnderecoDoCep(@PathVariable("cep") String cep) {
         LOGGER.info("Recebendo requisição para obter os dados do endereço com o parâmetro cep: {}", cep);
         //Validar os dados de entrada (gera uma exception em casos de erro)
-        utilService.validarDadosEntrada(null, cep);
+        utilService.validarDadosEntrada(null, cep, null, null);
         //
         Endereco endereco = service.obterEnderecoDoCep(cep);
         if(endereco == null) {

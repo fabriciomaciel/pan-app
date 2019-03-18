@@ -38,7 +38,7 @@ public class PessoaController {
   public ResponseEntity<Pessoa> obterDadosPessoa(@PathVariable("cpf") String cpf) {
     LOGGER.info("Recebendo requisição para obter os dados da pessoa com o parâmetro cpf: {}", cpf);
     //Validar os dados de entrada (gera uma exception em casos de erro)
-    utilService.validarDadosEntrada(cpf, null);
+    utilService.validarDadosEntrada(cpf, null, null, null);
     //Realiza a consulta
     Pessoa pessoa = service.consultarPessoa(cpf);
 
@@ -60,7 +60,7 @@ public class PessoaController {
   public ResponseEntity<List<Endereco>> obterEnderecoPessoa(@PathVariable("cpf") String cpf, @PathVariable("cep") String cep) {
     LOGGER.info("Recebendo requisição para obter os dados da pessoa com o parâmetro cpf: {}, cep: {}", cpf, cep);
     //Validar os dados de entrada (gera uma exception em casos de erro)
-    utilService.validarDadosEntrada(cpf, cep);
+    utilService.validarDadosEntrada(cpf, cep, null, null);
     //Realiza a consulta
     List<Endereco>  enderecos = service.consultarEnderecoPessoa(cpf, cep);
 
@@ -77,7 +77,7 @@ public class PessoaController {
                                                         @RequestBody Endereco enderecoAlterado) {
     LOGGER.info("Recebendo requisição para alterar endereço da pessoa com o parâmetro cpf: {}, enderecoId: {}", cpf, enderecoId);
     //Validar os dados de entrada (gera uma exception em casos de erro)
-    utilService.validarDadosEntrada(cpf, null);
+    utilService.validarDadosEntrada(cpf, null, enderecoId, enderecoAlterado);
     Endereco endereco = service.alterarEnderecoPessoa(cpf, enderecoId, enderecoAlterado);
     if(endereco == null) {
       return ResponseEntity.noContent().build();
